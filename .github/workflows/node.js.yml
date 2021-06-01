@@ -35,6 +35,7 @@ jobs:
         path: ./sls.zip
   
   upload:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master

@@ -52,6 +52,6 @@ jobs:
           zip_file: sls.zip
           memory_size: 128
           timeout: 10
-          handler: index
+          handler: index.handler
           role: ${{ secrets.AWS_ARN }}
           runtime: nodejs12.x

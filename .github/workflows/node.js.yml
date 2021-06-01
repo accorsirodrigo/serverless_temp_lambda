@@ -33,12 +33,17 @@ jobs:
       with:
         name: sls_temp_lambda
         path: ./sls.zip
+        retention-days: 1
   
   upload:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - name: Download zip file
+        uses: actions/download-artifact@v2
+        with:
+          name: sls_temp_lambda
+      #- uses: actions/checkout@master
       - uses: shallwefootball/s3-upload-action@master
         with:
           aws_key_id: ${{ secrets.AWS_KEY_ID }}

@@ -28,8 +28,26 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
 #    - run: npm test
+
     - name: Archive code coverage results
       uses: actions/upload-artifact@v2
       with:
-        name: code-coverage-report
+        name: sls_temp_lambda
         path: ./sls.zip
+    - uses: shallwefootball/s3-upload-action@master
+        name: Upload S3
+        id: S3
+        with:
+          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: 'static'
+
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target_url: https://aws-bucket.s3.ap-northeast-2.amazonaws.com/${{steps.S3.outputs.object_key}}/index.html
+          state: 'success'
+          deployment_id: ${{ steps.test.outputs.deployment_id }}

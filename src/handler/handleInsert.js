@@ -9,6 +9,9 @@ module.exports = async function(event, request){
   
     let data = await db.insert(event);
     log('DEBUG|', 'data: ',  JSON.stringify(data));
+ 
+    //debug on cloudwatch
+    console.log(JSON.stringify(event));
   
     let responseBody = {
         message: 'Success on insert new data',
